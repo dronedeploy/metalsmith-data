@@ -37,7 +37,7 @@ function plugin (opts) {
       }
     }
 
-    metalsmith.metadata().data = data
+    metalsmith.metadata()[opts.namespace || 'data'] = data
     done()
   }
 
