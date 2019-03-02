@@ -20,24 +20,27 @@ function plugin (opts) {
     var data = {}
     var name
 
-    for (name in opts) {
+    for (name in opts.files) {
       // allows you to add dynamic data from configuration
-      if (typeof opts[name] === 'object' && !opts[name].src) {
-        data[name] = opts[name]
-      } else if (typeof opts[name] === 'function') {
+      if (typeof opts.files[name] === 'object' && !opts.files[name].src) {
+        data[name] = opts.files[name]
+      } else if (typeof opts.files[name] === 'function') {
         // or use a function to generate the data
-        data[name] = opts[name]()
+        data[name] = opts.files[name]()
       } else {
-        if (typeof opts[name] === 'object') {
-          data[name] = parse(opts[name].src, opts[name].property, opts[name].options)
+        if (typeof opts.files[name] === 'object') {
+          data[name] = parse(opts.files[name].src, opts.files[name].property)
           continue
         }
 
-        data[name] = parse(opts[name])
+        data[name] = parse(opts.files[name])
       }
     }
 
-    metalsmith.metadata()[opts.namespace || 'data'] = data
+    metalsmith.metadata().data = data
+    if (opts.namespace) {
+      metalsmith.metadata()[opts.namespace] = data
+    }
     done()
   }
 
